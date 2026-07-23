@@ -199,8 +199,6 @@ function applyDarkMode() {
 }
 function applyWorldTheme(world) {
   const root = document.documentElement.style;
-  root.setProperty('--bg-1', world.bg1);
-  root.setProperty('--bg-2', world.bg2);
   root.setProperty('--blob-1', world.blob1);
   root.setProperty('--blob-2', world.blob2);
   root.setProperty('--world-hue', (world.hue || 0) + 'deg');
@@ -488,9 +486,11 @@ class Game {
     facets.className = 'gem-facets';
     facets.style.setProperty('--delay', delay);
     shape.appendChild(facets);
-    const icon = document.createElement('div');
-    icon.className = 'gem-icon';
-    shape.appendChild(icon);
+    if (!cell.key) {
+      const icon = document.createElement('div');
+      icon.className = 'gem-icon';
+      shape.appendChild(icon);
+    }
     el.appendChild(shape);
     if (cell.iceLevel > 0) {
       const ice = document.createElement('div');
@@ -505,7 +505,6 @@ class Game {
     if (cell.key) {
       const key = document.createElement('div');
       key.className = 'key-overlay';
-      key.textContent = '🔑';
       el.appendChild(key);
     }
     this._applySpecialClass(el, cell.special);
@@ -1378,7 +1377,11 @@ function renderLevelMap(scrollToCurrent) {
     const stars = saveData.stars[i] || 0;
     const starsEl = document.createElement('div');
     starsEl.className = 'lv-stars';
-    starsEl.textContent = '★'.repeat(stars) + '☆'.repeat(3 - stars);
+    for (let s = 0; s < 3; s++) {
+      const dot = document.createElement('span');
+      dot.className = 'mini-star' + (s < stars ? ' filled' : '');
+      starsEl.appendChild(dot);
+    }
     node.appendChild(starsEl);
     node.addEventListener('click', () => {
       SoundManager.button();
@@ -1725,11 +1728,11 @@ function onLevelEnd(cfg, won) {
    Der Kontaktblock steht bewusst genau EIN Mal hier und wird bei künftigen
    Weiterentwicklungen des Spiels nicht wieder angefasst. */
 const IMPRESSUM_CONTACT = {
-  name: 'Jan Dierlich',      // z.B. "Jan Mustermann"
-  street: 'Steenacker 33',    // z.B. "Musterstraße 1"
-  city: '25499 Tangstedt',      // z.B. "12345 Musterstadt"
+  name: '',      // z.B. "Jan Mustermann"
+  street: '',    // z.B. "Musterstraße 1"
+  city: '',      // z.B. "12345 Musterstadt"
   country: 'Deutschland',
-  email: 'jandierlich@googlemail.com'      // z.B. "kontakt@beispiel.de"
+  email: ''      // z.B. "kontakt@beispiel.de"
 };
 
 function renderAchievements() {

@@ -1,8 +1,28 @@
 :root{
+  --bg-1:#eef1fb;
+  --bg-2:#ffffff;
+  --blob-1:#ffb3dd;
+  --blob-2:#a9e8ff;
+  --panel:#ffffff;
+  --panel-light:#f2f0fb;
+  --accent:#8a3ffc;
+  --accent-2:#0091ff;
+  --text:#241a3d;
+  --text-dim:#6a6088;
+  --good:#12a86b;
+  --warn:#e8a53f;
+  --danger:#e0245e;
+  --radius:18px;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+  --safe-left:env(safe-area-inset-left,0px);
+  --safe-right:env(safe-area-inset-right,0px);
+}
+
+/* Dunkler Modus (Alternative zum hellen Normalmodus oben) */
+body.dark-mode{
   --bg-1:#1a1436;
   --bg-2:#2c1f57;
-  --blob-1:#ff2ea0;
-  --blob-2:#22e8ff;
   --panel:#241a49;
   --panel-light:#33265f;
   --accent:#a24bff;
@@ -12,11 +32,6 @@
   --good:#39ffb0;
   --warn:#ffd23f;
   --danger:#ff3d7a;
-  --radius:18px;
-  --safe-top:env(safe-area-inset-top,0px);
-  --safe-bottom:env(safe-area-inset-bottom,0px);
-  --safe-left:env(safe-area-inset-left,0px);
-  --safe-right:env(safe-area-inset-right,0px);
 }
 
 *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
@@ -149,8 +164,15 @@ body::after{width:320px; height:320px; background:var(--blob-2); bottom:-90px; r
   box-shadow:0 0 0 6px rgba(143,107,255,.18);
 }
 .level-node .lv-stars{
-  position:absolute; bottom:-14px; font-size:.65rem; letter-spacing:1px; color:var(--warn);
+  position:absolute; bottom:-14px; left:0; width:100%;
+  display:flex; justify-content:center; gap:3px;
 }
+.level-node .lv-stars .mini-star{
+  width:.5rem; height:.5rem;
+  clip-path:polygon(50% 0%,61% 38%,100% 38%,68% 60%,79% 100%,50% 76%,21% 100%,32% 60%,0% 38%,39% 38%);
+  background:rgba(255,255,255,.28);
+}
+.level-node .lv-stars .mini-star.filled{background:var(--warn);}
 .level-node:nth-child(odd){align-self:flex-start; margin-left:18%;}
 .level-node:nth-child(even){align-self:flex-end; margin-right:18%;}
 
@@ -186,12 +208,10 @@ body::after{width:320px; height:320px; background:var(--blob-2); bottom:-90px; r
 }
 .board{
   position:relative;
-  background:
-    linear-gradient(160deg, rgba(255,255,255,.16), rgba(255,255,255,.04) 60%),
-    rgba(255,255,255,.06);
-  border:3px solid rgba(255,255,255,.4);
+  background:linear-gradient(160deg, #ffffff, #f3effc 60%);
+  border:3px solid rgba(138,63,252,.3);
   border-radius:16px;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.15), 0 0 24px rgba(162,75,255,.2), 0 10px 30px rgba(0,0,0,.35);
+  box-shadow:inset 0 0 0 1px rgba(138,63,252,.1), 0 0 24px rgba(138,63,252,.15), 0 10px 30px rgba(0,0,0,.12);
   transition:background .4s ease, box-shadow .4s ease, border-color .4s ease;
   perspective:900px;
 }
@@ -572,8 +592,14 @@ body.dark-mode .board-wrap::before{
 .howto-content strong{color:var(--text);}
 .howto-content ul{padding-left:0; list-style:none; display:flex; flex-direction:column; gap:8px;}
 
-.stars{text-align:center; font-size:2.2rem; letter-spacing:6px; color:#443a6e;}
-.stars .star.filled{color:var(--warn); text-shadow:0 0 12px rgba(255,184,79,.6);}
+.stars{text-align:center; display:flex; justify-content:center; gap:10px;}
+.star{
+  display:inline-block; width:1.8rem; height:1.8rem;
+  background:#443a6e;
+  clip-path:polygon(50% 0%,61% 38%,100% 38%,68% 60%,79% 100%,50% 76%,21% 100%,32% 60%,0% 38%,39% 38%);
+  transition:background .25s ease, filter .25s ease;
+}
+.stars .star.filled{background:var(--warn); filter:drop-shadow(0 0 6px rgba(255,184,79,.6));}
 #result-score{text-align:center; color:var(--text-dim);}
 
 @media (max-height:700px){
@@ -783,9 +809,13 @@ body.dark-mode .board-wrap::before{
 
 /* ===== Schlüssel-Kristalle ===== */
 .key-overlay{
-  position:absolute; inset:18%; pointer-events:none;
-  display:flex; align-items:center; justify-content:center;
-  font-size:1.1rem; text-shadow:0 1px 2px rgba(0,0,0,.5);
+  position:absolute; inset:24%; pointer-events:none; z-index:3;
+  background:rgba(255,255,255,.92);
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2024%2024%27%3E%3Ccircle%20cx%3D%277%27%20cy%3D%277%27%20r%3D%275%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.6%27/%3E%3Crect%20x%3D%2711%27%20y%3D%276%27%20width%3D%2711%27%20height%3D%272%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717%27%20y%3D%278%27%20width%3D%272%27%20height%3D%273%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2720%27%20y%3D%278%27%20width%3D%272%27%20height%3D%274%27%20fill%3D%27black%27/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2024%2024%27%3E%3Ccircle%20cx%3D%277%27%20cy%3D%277%27%20r%3D%275%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%272.6%27/%3E%3Crect%20x%3D%2711%27%20y%3D%276%27%20width%3D%2711%27%20height%3D%272%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2717%27%20y%3D%278%27%20width%3D%272%27%20height%3D%273%27%20fill%3D%27black%27/%3E%3Crect%20x%3D%2720%27%20y%3D%278%27%20width%3D%272%27%20height%3D%274%27%20fill%3D%27black%27/%3E%3C/svg%3E");
+  -webkit-mask-repeat:no-repeat; mask-repeat:no-repeat;
+  -webkit-mask-position:center; mask-position:center;
+  -webkit-mask-size:contain; mask-size:contain;
 }
 
 /* ===== Saisonale Mini-Skins ===== */
