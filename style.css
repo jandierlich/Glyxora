@@ -1,17 +1,17 @@
 :root{
-  --bg-1:#eef1fb;
-  --bg-2:#ffffff;
-  --blob-1:#ffb3dd;
-  --blob-2:#a9e8ff;
-  --panel:#ffffff;
-  --panel-light:#f2f0fb;
-  --accent:#8a3ffc;
-  --accent-2:#0091ff;
-  --text:#241a3d;
-  --text-dim:#6a6088;
-  --good:#12a86b;
-  --warn:#e8a53f;
-  --danger:#e0245e;
+  --bg-1:#c7cce3;
+  --bg-2:#e2dff2;
+  --blob-1:#f0a8d6;
+  --blob-2:#8fd0e8;
+  --panel:#eae6f5;
+  --panel-light:#ffffff;
+  --accent:#7c3aed;
+  --accent-2:#0072c9;
+  --text:#2a2140;
+  --text-dim:#5c5578;
+  --good:#0f8f5c;
+  --warn:#c9863a;
+  --danger:#c11f52;
   --radius:18px;
   --safe-top:env(safe-area-inset-top,0px);
   --safe-bottom:env(safe-area-inset-bottom,0px);
@@ -119,8 +119,8 @@ body::after{width:320px; height:320px; background:var(--blob-2); bottom:-90px; r
 }
 .btn:active{transform:scale(0.96); filter:brightness(0.92);}
 .btn-primary{background:linear-gradient(135deg,var(--accent),#5f2fe0); color:#fff; box-shadow:0 6px 18px rgba(162,75,255,.45), 0 0 22px rgba(34,232,255,.25);}
-.btn-secondary{background:var(--panel-light); color:var(--text);}
-.btn-ghost{background:transparent; color:var(--text-dim); font-weight:500; padding:10px;}
+.btn-secondary{background:var(--panel-light); color:var(--text); border:1.5px solid rgba(124,58,237,.28); box-shadow:0 2px 6px rgba(42,33,64,.12);}
+.btn-ghost{background:transparent; color:var(--text-dim); font-weight:600; padding:10px; text-decoration:underline; text-decoration-color:rgba(92,85,120,.4);}
 .btn-icon{font-size:1rem;}
 
 .home-stats{
@@ -208,10 +208,10 @@ body::after{width:320px; height:320px; background:var(--blob-2); bottom:-90px; r
 }
 .board{
   position:relative;
-  background:linear-gradient(160deg, #ffffff, #f3effc 60%);
-  border:3px solid rgba(138,63,252,.3);
+  background:linear-gradient(160deg, #d8d2ec, #c4bce2 60%);
+  border:3px solid rgba(124,58,237,.35);
   border-radius:16px;
-  box-shadow:inset 0 0 0 1px rgba(138,63,252,.1), 0 0 24px rgba(138,63,252,.15), 0 10px 30px rgba(0,0,0,.12);
+  box-shadow:inset 0 0 0 1px rgba(124,58,237,.12), 0 0 24px rgba(124,58,237,.18), 0 10px 30px rgba(0,0,0,.18);
   transition:background .4s ease, box-shadow .4s ease, border-color .4s ease;
   perspective:900px;
 }
