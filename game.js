@@ -199,6 +199,8 @@ function applyDarkMode() {
 }
 function applyWorldTheme(world) {
   const root = document.documentElement.style;
+  root.setProperty('--bg-1', world.bg1);
+  root.setProperty('--bg-2', world.bg2);
   root.setProperty('--blob-1', world.blob1);
   root.setProperty('--blob-2', world.blob2);
   root.setProperty('--world-hue', (world.hue || 0) + 'deg');
@@ -1728,11 +1730,11 @@ function onLevelEnd(cfg, won) {
    Der Kontaktblock steht bewusst genau EIN Mal hier und wird bei künftigen
    Weiterentwicklungen des Spiels nicht wieder angefasst. */
 const IMPRESSUM_CONTACT = {
-  name: 'Jan Dierlich',      // z.B. "Jan Mustermann"
-  street: 'Steenacker 33',    // z.B. "Musterstraße 1"
-  city: '25499 Tangstedt',      // z.B. "12345 Musterstadt"
+  name: '',      // z.B. "Jan Mustermann"
+  street: '',    // z.B. "Musterstraße 1"
+  city: '',      // z.B. "12345 Musterstadt"
   country: 'Deutschland',
-  email: 'jandierlich@googlemail.com'      // z.B. "kontakt@beispiel.de"
+  email: ''      // z.B. "kontakt@beispiel.de"
 };
 
 function renderAchievements() {
