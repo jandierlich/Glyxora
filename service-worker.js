@@ -4,7 +4,7 @@
    neu befuellt wurde -- das war die Ursache fuer "der Fix wirkt einfach
    nicht". Jetzt gilt: online = immer die aktuellste Version, offline =
    letzter bekannter Stand aus dem Cache als Fallback. */
-const CACHE_NAME = 'glyxora-cache-v3';
+const CACHE_NAME = 'glyxora-cache-v4';
 const ASSETS = [
   './',
   './index.html',
