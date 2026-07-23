@@ -1680,11 +1680,11 @@ function onLevelEnd(cfg, won) {
    Der Kontaktblock steht bewusst genau EIN Mal hier und wird bei künftigen
    Weiterentwicklungen des Spiels nicht wieder angefasst. */
 const IMPRESSUM_CONTACT = {
-  name: '',      // z.B. "Jan Mustermann"
-  street: '',    // z.B. "Musterstraße 1"
-  city: '',      // z.B. "12345 Musterstadt"
+  name: 'Jan Dierlich',      // z.B. "Jan Mustermann"
+  street: 'Steenacker 33',    // z.B. "Musterstraße 1"
+  city: '25499 Tangstedt',      // z.B. "12345 Musterstadt"
   country: 'Deutschland',
-  email: ''      // z.B. "kontakt@beispiel.de"
+  email: 'jandierlich@googlemail.com'      // z.B. "kontakt@beispiel.de"
 };
 
 function renderAchievements() {
