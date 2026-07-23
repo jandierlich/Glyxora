@@ -6,6 +6,20 @@
 
 'use strict';
 
+/* ---------- Echte sichtbare Höhe (behebt weiße Ränder in iOS Safari/PWA) ----------
+   iOS liefert bei ein-/ausblendender Adressleiste bzw. im installierten Modus
+   nicht immer eine korrekte 100%/100dvh-Höhe. Wir messen die tatsächliche
+   sichtbare Höhe per JS und legen sie als CSS-Variable ab; --app-height ist in
+   style.css die letzte (also gewinnende) Fallback-Stufe für html/body/#app. */
+function updateAppHeight() {
+  const h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+  document.documentElement.style.setProperty('--app-height', h + 'px');
+}
+updateAppHeight();
+window.addEventListener('resize', updateAppHeight);
+window.addEventListener('orientationchange', () => setTimeout(updateAppHeight, 120));
+if (window.visualViewport) window.visualViewport.addEventListener('resize', updateAppHeight);
+
 /* ---------- Grundkonstanten ---------- */
 const GEM_TYPES = ['rubin', 'saphir', 'smaragd', 'amethyst', 'topas', 'bernstein'];
 const GEM_COLORS = {
@@ -333,7 +347,7 @@ class Game {
     this._renderAll(true);
     this._bindInput();
     window.addEventListener('resize', () => this._handleResize());
-    this._sparkleTimer = setInterval(() => this._spawnSparkle(), 1500);
+    this._sparkleTimer = setInterval(() => this._spawnSparkle(), 1300);
   }
 
   /* ---------- Board-Geometrie ---------- */
@@ -1238,11 +1252,18 @@ class Game {
     });
   }
 
-  /* Ruhiger Funkel-Effekt: unabhängig von Zügen/Matches blitzt gelegentlich
-     ein einzelner, zufällig ausgewählter Kristall kurz auf – rein
-     dekorativ, ohne Einfluss auf das Spielgeschehen. */
+  /* Ruhige Überraschungs-Effekte: unabhängig von Zügen/Matches passiert
+     gelegentlich etwas auf dem Spielfeld — mal ein Funkeln, mal ein kurzes
+     Wackeln, mal ein Aufblitzen eines zufälligen Kristalls. Rein dekorativ,
+     ohne Einfluss auf das Spielgeschehen, hält das Feld aber lebendig. */
   _spawnSparkle() {
     if (this.ended || !this.boardEl.isConnected) return;
+    const roll = Math.random();
+    if (roll < 0.55) this._ambientTwinkle();
+    else if (roll < 0.8) this._ambientWiggle();
+    else this._ambientFlash();
+  }
+  _ambientTwinkle() {
     const r = rnd(this.size);
     const c = rnd(this.size);
     const cell = this.grid[r] && this.grid[r][c];
@@ -1255,6 +1276,27 @@ class Game {
     el.style.top = cy + 'px';
     this.fxEl.appendChild(el);
     setTimeout(() => el.remove(), 900);
+  }
+  _ambientWiggle() {
+    const r = rnd(this.size);
+    const c = rnd(this.size);
+    const cell = this.grid[r] && this.grid[r][c];
+    if (!cell || this.busy) return;
+    const el = this.gemEls.get(cell.id);
+    if (!el) return;
+    el.classList.add('ambient-wiggle');
+    setTimeout(() => el.classList.remove('ambient-wiggle'), 520);
+  }
+  _ambientFlash() {
+    const r = rnd(this.size);
+    const c = rnd(this.size);
+    const cell = this.grid[r] && this.grid[r][c];
+    if (!cell) return;
+    const el = this.gemEls.get(cell.id);
+    const shape = el && el.querySelector('.gem-shape');
+    if (!shape) return;
+    shape.classList.add('ambient-flash');
+    setTimeout(() => shape.classList.remove('ambient-flash'), 720);
   }
 
   destroy() {
@@ -1680,11 +1722,11 @@ function onLevelEnd(cfg, won) {
    Der Kontaktblock steht bewusst genau EIN Mal hier und wird bei künftigen
    Weiterentwicklungen des Spiels nicht wieder angefasst. */
 const IMPRESSUM_CONTACT = {
-  name: 'Jan Dierlich',      // z.B. "Jan Mustermann"
-  street: 'Steenacker 33',    // z.B. "Musterstraße 1"
-  city: '25499 Tangstedt',      // z.B. "12345 Musterstadt"
+  name: '',      // z.B. "Jan Mustermann"
+  street: '',    // z.B. "Musterstraße 1"
+  city: '',      // z.B. "12345 Musterstadt"
   country: 'Deutschland',
-  email: 'jandierlich@googlemail.com'      // z.B. "kontakt@beispiel.de"
+  email: ''      // z.B. "kontakt@beispiel.de"
 };
 
 function renderAchievements() {

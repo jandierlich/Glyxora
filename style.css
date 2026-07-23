@@ -25,10 +25,13 @@ html,body{
   margin:0; padding:0;
   height:100%;
   height:-webkit-fill-available;
+  height:100dvh;
+  height:calc(var(--app-height, 100vh));
   min-height:100%;
   min-height:-webkit-fill-available;
-  background-color:var(--bg-1);
+  min-height:100dvh;
   background:radial-gradient(ellipse at top, var(--bg-2), var(--bg-1) 70%);
+  background-color:var(--bg-1);
   color:var(--text);
   font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   overflow:hidden;
@@ -50,6 +53,9 @@ body::after{width:320px; height:320px; background:var(--blob-2); bottom:-90px; r
 
 #app{
   position:fixed; inset:0; z-index:1;
+  height:100%;
+  height:100dvh;
+  height:calc(var(--app-height, 100vh));
   padding-top:var(--safe-top);
   padding-bottom:var(--safe-bottom);
   padding-left:var(--safe-left);
@@ -180,10 +186,13 @@ body::after{width:320px; height:320px; background:var(--blob-2); bottom:-90px; r
 }
 .board{
   position:relative;
-  background:rgba(0,0,0,.22);
+  background:
+    linear-gradient(160deg, rgba(255,255,255,.16), rgba(255,255,255,.04) 60%),
+    rgba(255,255,255,.06);
+  border:3px solid rgba(255,255,255,.4);
   border-radius:16px;
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);
-  transition:background .4s ease, box-shadow .4s ease;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.15), 0 0 24px rgba(162,75,255,.2), 0 10px 30px rgba(0,0,0,.35);
+  transition:background .4s ease, box-shadow .4s ease, border-color .4s ease;
   perspective:900px;
 }
 .board-fx{position:absolute; inset:0; pointer-events:none;}
@@ -208,6 +217,7 @@ body.dark-mode .board{
   background:
     radial-gradient(circle at 50% 28%, rgba(255,214,140,.12), transparent 62%),
     linear-gradient(160deg,#0b0710,#020103 72%);
+  border-color:rgba(214,175,94,.6);
   box-shadow:
     inset 0 0 0 2px rgba(214,175,94,.55),
     inset 0 0 26px rgba(0,0,0,.85),
@@ -233,8 +243,9 @@ body.dark-mode .board-wrap::before{
   clip-path:var(--clip);
   background:linear-gradient(155deg, rgba(255,255,255,.6), var(--face) 45%, var(--depth) 100%);
   opacity:.9;
+  box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.4), inset 0 -6px 10px rgba(0,0,0,.25);
   filter:hue-rotate(var(--world-hue,0deg)) drop-shadow(0 0 7px var(--glow)) drop-shadow(0 0 3px var(--glow));
-  animation:idleBounce 2.6s ease-in-out infinite;
+  animation:idleBounce 3.2s ease-in-out infinite;
   animation-delay:var(--delay, 0s);
 }
 .gem-shape::before{
@@ -254,8 +265,24 @@ body.dark-mode .board-wrap::before{
   transform:rotate(-20deg);
 }
 @keyframes idleBounce{
-  0%,100%{transform:translateY(0) rotate(0deg);}
-  50%{transform:translateY(-5%) rotate(-3deg);}
+  0%,100%{transform:translateY(0) rotate(0deg) scale(1);}
+  50%{transform:translateY(-3%) rotate(-1.5deg) scale(1.02);}
+}
+
+/* Gelegentliche Überraschungs-Animationen: kurzes Aufblitzen oder Wackeln
+   an zufälligen Kristallen, unabhängig von Zügen — damit das Spielfeld
+   nie ganz still steht. */
+.gem-shape.ambient-flash{animation:ambientFlash .7s ease-in-out;}
+@keyframes ambientFlash{
+  0%,100%{filter:hue-rotate(var(--world-hue,0deg)) drop-shadow(0 0 7px var(--glow)) drop-shadow(0 0 3px var(--glow)) brightness(1);}
+  40%{filter:hue-rotate(var(--world-hue,0deg)) drop-shadow(0 0 16px var(--glow)) drop-shadow(0 0 9px var(--glow)) brightness(1.5);}
+}
+.gem.ambient-wiggle{animation:ambientWiggle .5s ease-in-out;}
+@keyframes ambientWiggle{
+  0%,100%{transform:rotate(0deg) scale(1);}
+  25%{transform:rotate(-7deg) scale(1.05);}
+  50%{transform:rotate(6deg) scale(1.05);}
+  75%{transform:rotate(-3deg) scale(1.02);}
 }
 
 /* Facetten-Muster + Glanz-Schimmer: schräge Hell/Dunkel-Kanten simulieren
@@ -308,12 +335,12 @@ body.dark-mode .board-wrap::before{
 }
 
 /* Cartoon-3D-Farbwelten je Kristalltyp (Form + Vorder-/Tiefenfarbe) — bunt & individuell, farbenblind-freundlich durch unterschiedliche Silhouetten */
-.t-rubin .gem-shape{--clip:circle(48% at 50% 50%); --face:#ff1f63; --depth:#8a002f; --glow:#ff5c96;}
-.t-saphir .gem-shape{--clip:polygon(50% 0%,100% 50%,50% 100%,0% 50%); --face:#0091ff; --depth:#003f8c; --glow:#4fc3ff;}
-.t-smaragd .gem-shape{--clip:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%); --face:#00e676; --depth:#007a3d; --glow:#5cffb0;}
-.t-amethyst .gem-shape{--clip:polygon(50% 3%,97% 97%,3% 97%); --face:#b400ff; --depth:#5a0088; --glow:#d979ff;}
-.t-topas .gem-shape{--clip:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%); --face:#ffe600; --depth:#a37f00; --glow:#fff35c;}
-.t-bernstein .gem-shape{--clip:inset(4% round 26%); --face:#ff8a00; --depth:#8a3d00; --glow:#ffb655;}
+.t-rubin{--clip:circle(48% at 50% 50%); --face:#ff1f63; --depth:#8a002f; --glow:#ff5c96;}
+.t-saphir{--clip:polygon(50% 0%,100% 50%,50% 100%,0% 50%); --face:#0091ff; --depth:#003f8c; --glow:#4fc3ff;}
+.t-smaragd{--clip:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%); --face:#00e676; --depth:#007a3d; --glow:#5cffb0;}
+.t-amethyst{--clip:polygon(50% 3%,97% 97%,3% 97%); --face:#b400ff; --depth:#5a0088; --glow:#d979ff;}
+.t-topas{--clip:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%); --face:#ffe600; --depth:#a37f00; --glow:#fff35c;}
+.t-bernstein{--clip:inset(4% round 26%); --face:#ff8a00; --depth:#8a3d00; --glow:#ffb655;}
 
 .gem.special-line .gem-shape{box-shadow:0 0 0 3px rgba(255,255,255,.55) inset, 0 0 14px rgba(255,255,255,.5);}
 .gem.special-line::after{
@@ -333,21 +360,21 @@ body.dark-mode .board-wrap::before{
 @keyframes spin{to{transform:rotate(360deg);}}
 
 .ice-overlay{
-  position:absolute; inset:2%; border-radius:14%;
-  background:rgba(180,225,255,.55);
+  position:absolute; inset:0; clip-path:var(--clip);
+  background:rgba(180,225,255,.38);
   backdrop-filter:blur(1px);
-  box-shadow:inset 0 0 0 2px rgba(255,255,255,.7);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.6);
 }
-.ice-overlay.cracked{background:rgba(180,225,255,.22);}
+.ice-overlay.cracked{background:rgba(180,225,255,.14);}
 
 /* Käfig-Hindernis: neon-umrandetes Gitter, das mit einem Treffer aufbricht */
 .cage-overlay{
-  position:absolute; inset:3%; border-radius:20%;
+  position:absolute; inset:0; clip-path:var(--clip);
   pointer-events:none; z-index:3;
   background:
-    repeating-linear-gradient(0deg, transparent 0 18%, rgba(34,232,255,.85) 18% 22%, transparent 22% 50%),
-    repeating-linear-gradient(90deg, transparent 0 18%, rgba(34,232,255,.85) 18% 22%, transparent 22% 50%);
-  box-shadow:inset 0 0 0 2px rgba(34,232,255,.6), 0 0 10px rgba(34,232,255,.5);
+    repeating-linear-gradient(0deg, transparent 0 18%, rgba(34,232,255,.6) 18% 22%, transparent 22% 50%),
+    repeating-linear-gradient(90deg, transparent 0 18%, rgba(34,232,255,.6) 18% 22%, transparent 22% 50%);
+  box-shadow:inset 0 0 0 2px rgba(34,232,255,.45), 0 0 10px rgba(34,232,255,.4);
   transition:opacity .3s ease, transform .3s ease;
 }
 .cage-overlay.breaking{opacity:0; transform:scale(1.3) rotate(12deg);}
@@ -451,12 +478,13 @@ body.dark-mode .board-wrap::before{
   display:flex; align-items:center; justify-content:center;
 }
 .tutorial-gem{
-  position:absolute; width:36px; height:36px; border-radius:10px;
+  position:absolute; top:50%; left:50%; margin:-18px 0 0 -18px;
+  width:36px; height:36px; border-radius:10px;
   background:linear-gradient(155deg, rgba(255,255,255,.6), #0091ff 45%, #003f8c 100%);
   filter:drop-shadow(0 0 8px #4fc3ff);
 }
 .tutorial-gem.tg-b{background:linear-gradient(155deg, rgba(255,255,255,.6), #ff1f63 45%, #8a002f 100%); filter:drop-shadow(0 0 8px #ff5c96);}
-.tutorial-hand{position:absolute; font-size:1.6rem; opacity:0;}
+.tutorial-hand{position:absolute; top:50%; left:50%; margin:-14px 0 0 -14px; font-size:1.6rem; opacity:0;}
 
 .demo-swap .tg-a{animation:demoSwapA 2.2s ease-in-out infinite;}
 .demo-swap .tg-b{animation:demoSwapB 2.2s ease-in-out infinite;}
@@ -465,14 +493,14 @@ body.dark-mode .board-wrap::before{
 @keyframes demoSwapB{0%,15%{transform:translateX(30px);} 50%,65%{transform:translateX(-30px);} 100%{transform:translateX(30px);}}
 @keyframes demoHand{0%,10%{opacity:0; transform:translate(30px,20px) scale(1);} 20%,40%{opacity:1; transform:translate(30px,20px) scale(.9);} 45%,100%{opacity:0;}}
 
-.demo-match .tg-a{left:-38px; animation:demoMatch 1.8s ease-in-out infinite;}
-.demo-match .tg-b{left:0; animation:demoMatch 1.8s ease-in-out infinite .12s;}
+.demo-match .tg-a{margin-left:-48px; animation:demoMatch 1.8s ease-in-out infinite;}
+.demo-match .tg-b{margin-left:12px; animation:demoMatch 1.8s ease-in-out infinite .12s;}
 .demo-match .tutorial-hand{display:none;}
 .demo-match::after{
-  content:"+30"; position:absolute; right:24%; top:20%; color:var(--warn); font-weight:800;
+  content:"+30"; position:absolute; left:50%; top:22%; margin-left:14px; color:var(--warn); font-weight:800;
   animation:demoMatchScore 1.8s ease-in-out infinite;
 }
-@keyframes demoMatch{0%,55%{opacity:1; transform:scale(1) translateX(0);} 70%{opacity:0; transform:scale(.3) rotate(180deg);} 100%{opacity:0;}}
+@keyframes demoMatch{0%,55%{opacity:1; transform:scale(1) rotate(0deg);} 70%{opacity:0; transform:scale(.3) rotate(180deg);} 100%{opacity:0;}}
 @keyframes demoMatchScore{0%,55%{opacity:0; transform:translateY(0);} 70%{opacity:1; transform:translateY(-6px);} 100%{opacity:0; transform:translateY(-24px);}}
 
 .demo-goal{flex-direction:column; gap:10px;}
@@ -521,11 +549,6 @@ body.dark-mode .board-wrap::before{
 .btn:active{box-shadow:0 2px 0 rgba(0,0,0,.18); transform:translateY(3px) scale(.98);}
 .btn-primary{box-shadow:0 5px 0 #4a3aa8;}
 .btn-primary:active{box-shadow:0 2px 0 #4a3aa8;}
-
-.board{
-  border:3px solid rgba(34,232,255,.35);
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.05), 0 0 24px rgba(162,75,255,.25), 0 10px 30px rgba(0,0,0,.35);
-}
 
 .legal-links{display:flex; align-items:center; justify-content:center; margin-top:2px;}
 .link-btn{
